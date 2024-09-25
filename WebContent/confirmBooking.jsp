@@ -1,77 +1,89 @@
+<%@ page import="java.sql.*" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="dao.*, bean.*" %>
 
- 
- <%@ page import="dao.BookingDAO, java.text.SimpleDateFormat, java.util.Date, java.sql.*, bean.UserRegistration, dao.UserRegistrationDAO" %>
 <%
-    // Retrieve service details from the request
-    String serviceId = request.getParameter("serviceId");
-    String serviceName = request.getParameter("serviceName");
-    String amountFrom = request.getParameter("amountFrom");
-    String amountTo = request.getParameter("amountTo");
-    String appointmentDate = request.getParameter("appointmentDate");
-    String appointmentTime = request.getParameter("appointmentTime");
-
-    // Debugging output
-    System.out.println("serviceId: " + serviceId);
-    System.out.println("serviceName: " + serviceName);
-    System.out.println("amountFrom: " + amountFrom);
-    System.out.println("amountTo: " + amountTo);
-    System.out.println("appointmentDate: " + appointmentDate);
-    System.out.println("appointmentTime: " + appointmentTime);
-
-    if (serviceId == null || serviceName == null || amountFrom == null || amountTo == null || appointmentDate == null || appointmentTime == null) {
-        response.sendRedirect("viewFavourites.jsp?message=Invalid service details");
-        return;
-    }
-
     HttpSession httpsession = request.getSession(false);
     String email = null;
 
+    // Retrieve the email from the session
     if (httpsession != null) {
         email = (String) httpsession.getAttribute("email");
     }
 
+    // Redirect to login if session does not exist or email is not found
     if (email == null) {
         response.sendRedirect("login.jsp");
         return;
     }
 
-    UserRegistrationDAO userDAO = new UserRegistrationDAO();
-    UserRegistration user = userDAO.getUserByEmail(email);
-    int userId = user.getUser_id();
-
-    // Convert appointmentDate from String to java.sql.Date
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    java.sql.Date sqlAppointmentDate = null;
-    try {
-        java.util.Date parsedDate = dateFormat.parse(appointmentDate);
-        sqlAppointmentDate = new java.sql.Date(parsedDate.getTime());
-    } catch (Exception e) {
-        response.sendRedirect("bookNow.jsp?message=Invalid date format");
+    // Fetch user details from the database
+    UserProfileDAO userDAO = new UserProfileDAO();
+    UserProfileBean user = userDAO.getUserByEmail(email);
+    if (user == null) {
+        response.sendRedirect("login.jsp?message=User not found");
         return;
     }
 
-    // Calculate advance amount (25% of the average of the amount range)
-    double amountFromDouble = Double.parseDouble(amountFrom);
-    double amountToDouble = Double.parseDouble(amountTo);
-    double advanceAmount = 0.25 * ((amountFromDouble + amountToDouble) / 2); // Average of the range
+    int userId = user.getUserId(); // Assuming getUserId() returns the user's ID
+    out.print("User ID: " + userId); // Debug line
 
-    // Book the appointment using BookingDAO
+%>
+
+<%
+    // Retrieve payment ID and other booking details
+    String paymentId = request.getParameter("razorpay_payment_id");
+    String serviceId = request.getParameter("serviceId");
+    String serviceName = request.getParameter("serviceName");
+    int amountFrom = Integer.parseInt(request.getParameter("amountFrom"));
+    int amountTo = Integer.parseInt(request.getParameter("amountTo"));
+    String appointmentDate = request.getParameter("appointmentDate");
+    String appointmentTime = request.getParameter("appointmentTime");
+    String userEmail = email;  // Assuming you retrieved the email earlier
+
+    // Validate payment ID
+    if (paymentId == null || paymentId.isEmpty()) {
+        // Handle error: Payment ID not available
+        response.sendRedirect("error.jsp?message=Payment failed or was not processed correctly");
+        return;
+    }
+
+    // Create a BookingBean object to hold booking details
+    BookingBean booking = new BookingBean();
+    booking.setServiceId(Integer.parseInt(serviceId));
+    booking.setServiceName(serviceName);
+    booking.setAmountFrom(amountFrom);
+    booking.setAmountTo(amountTo);
+    booking.setAppointmentDate(appointmentDate);
+    booking.setAppointmentTime(appointmentTime);
+    booking.setUserEmail(userEmail);
+    booking.setPaymentId(paymentId);
+
+    // Create BookingDAO instance to save the booking
     BookingDAO bookingDAO = new BookingDAO();
+    boolean isSaved = bookingDAO.saveBooking(booking);
     
-    int bookingId = bookingDAO.bookAppointment(
-        Integer.parseInt(serviceId),  // serviceId
-        serviceName,                   // serviceName
-        amountFromDouble,              // amountFrom
-        amountToDouble,                // amountTo
-        sqlAppointmentDate,            // appointmentDate
-        appointmentTime,               // appointmentTime
-        userId                         // userId
-    );
+    // Create FavoriteDAO instance to remove the favorite
+    FavoriteDAO favoriteDAO = new FavoriteDAO();
 
-    if (bookingId > 0) {
-        response.sendRedirect("payment.jsp?amount=" + advanceAmount + "&bookingId=" + bookingId);
+    if (isSaved) {
+     /*    // Remove the service from favorites after booking is saved
+        boolean isFavoriteRemoved = favoriteDAO.removeFavorite(userId, Integer.parseInt(serviceId)); // Ensure serviceId is an integer
+
+        if (!isFavoriteRemoved) {
+            System.out.println("Failed to remove favorite service for user: " + userId);
+        } */
+
+        // Booking saved successfully
+        double totalAmount = (amountFrom + amountTo) / 2.0; // Assuming you want the average for display
+        response.sendRedirect("success.jsp?serviceName=" + URLEncoder.encode(serviceName, "UTF-8") +
+                "&appointmentDate=" + URLEncoder.encode(appointmentDate, "UTF-8") +
+                "&appointmentTime=" + URLEncoder.encode(appointmentTime, "UTF-8") +
+                "&totalAmount=" + totalAmount +
+                "&message=" + URLEncoder.encode("Thank you for booking!", "UTF-8"));
     } else {
-        response.sendRedirect("bookNow.jsp?message=Failed to book appointment");
+        // Failed to save booking
+        response.sendRedirect("error.jsp?message=Booking could not be saved.");
     }
 %>
- 

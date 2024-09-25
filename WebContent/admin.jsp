@@ -5,83 +5,102 @@
 <%@ page import="dao.UserRegistrationDAO"%>
 <%@ page import="java.sql.SQLException"%>
 <%@ page import="dao.GalleryDAO"%>
+<%@ page import="dao.BookingDAO"%>
 <html lang="en">
 <head>
-    <meta charset="ISO-8859-1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Dashboard - VELVETVIBE</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Added Font Awesome -->
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        .navbar {
-            margin-bottom: 20px;
-            background-color: #f1f1f1; /* Light gray color */
-        }
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: #333; /* Darker text color for contrast */
-        }
-        .navbar-nav .nav-link {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #333; /* Darker text color for contrast */
-        }
-        .navbar-nav .nav-link:hover {
-            color: #495057; /* Slightly darker on hover */
-        }
-        .dropdown-menu {
-            min-width: 180px;
-        }
-        h1 {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #212529;
-        }
-        .card {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-        .card-services {
-            background-color: gray; /* Match card color with navbar */
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .card-body {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 20px;
-        }
-        .card-body img {
-            border-radius: 50%; /* Makes the image circular */
-            max-width: 100px;
-            height: auto;
-            margin-right: 20px; /* Increased margin for spacing */
-        }
-        .card-body .text-content {
-            flex: 1;
-        }
-        .card-body .card-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #f8f9fa;
-            margin-bottom: 10px; /* Adds spacing between title and content */
-        }
-        .card-body p {
-            font-size: 1.25rem;
-            margin: 0;
-        }
-    </style>
+<meta charset="ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Dashboard - VELVETVIBE</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	rel="stylesheet">
+<!-- Added Font Awesome -->
+<style>
+body {
+	font-family: 'Arial', sans-serif;
+	background-color: #f8f9fa;
+	color: #333;
+}
+
+.navbar {
+	margin-bottom: 20px;
+	background-color: #f1f1f1; /* Light gray color */
+}
+
+.navbar-brand {
+	font-weight: bold;
+	font-size: 1.5rem;
+	color: #333; /* Darker text color for contrast */
+}
+
+.navbar-nav .nav-link {
+	font-size: 1.1rem;
+	font-weight: 500;
+	color: #333; /* Darker text color for contrast */
+}
+
+.navbar-nav .nav-link:hover {
+	color: #495057; /* Slightly darker on hover */
+}
+
+.dropdown-menu {
+	min-width: 180px;
+}
+
+h1 {
+	text-align: center;
+	margin-top: 50px;
+	font-size: 2.5rem;
+	font-weight: bold;
+	color: #212529;
+}
+
+.card {
+	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.card-services {
+	background-color: gray; /* Match card color with navbar */
+	color: white;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 20px;
+}
+
+.card-body img {
+	border-radius: 50%; /* Makes the image circular */
+	max-width: 100px;
+	height: auto;
+	margin-right: 20px; /* Increased margin for spacing */
+}
+
+.card-body .text-content {
+	flex: 1;
+}
+
+.card-body .card-title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #f8f9fa;
+	margin-bottom: 10px; /* Adds spacing between title and content */
+}
+
+.card-body p {
+	font-size: 1.25rem;
+	margin: 0;
+}
+</style>
 </head>
 
 <body>
@@ -110,20 +129,21 @@
 									Service Category</a></li>
 							<li><a class="dropdown-item" href="viewServiceCategory.jsp">View
 									Service Category</a></li>
-									<li><a class="dropdown-item" href="addServiceVelvetvibe.jsp">Add
+							<li><a class="dropdown-item" href="addServiceVelvetvibe.jsp">Add
 									Service Category Details</a></li>
-							<li><a class="dropdown-item" href="viewServiceVelvetvibe.jsp">View
-									Service Category Details</a></li>
+							<li><a class="dropdown-item"
+								href="viewServiceVelvetvibe.jsp">View Service Category
+									Details</a></li>
 						</ul></li>
 				</ul>
 
 				<ul class="navbar-nav">
-					<li class="nav-item"><a class="nav-link" href="#">Appointments</a>
-					</li>
+					<li class="nav-item"><a class="nav-link"
+						href="viewAppointmentAdmin.jsp">Appointments</a></li>
 				</ul>
 				<ul class="navbar-nav">
-					<li class="nav-item"><a class="nav-link" href="#">Customers</a>
-					</li>
+					<li class="nav-item"><a class="nav-link"
+						href="viewCustomers.jsp">Customers</a></li>
 				</ul>
 				<ul class="navbar-nav">
 					<li class="nav-item"><a class="nav-link"
@@ -188,8 +208,20 @@
 						<img src="./images/service-img2.jpg" alt="Appointments Image">
 						<div class="text-content">
 							<h5 class="card-title">Appointments</h5>
-							<p class="card-text">15</p>
+							<p class="card-text">
+								<%
+									BookingDAO bookingDAO = new BookingDAO();
+									int appointmentsCount = 0;
+									try {
+										appointmentsCount = bookingDAO.getAllBookings().size(); // Get the size of the bookings list
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								%>
+								<%=appointmentsCount%>
+							</p>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -197,26 +229,22 @@
 				<div class="card text-center card-services">
 					<div class="card-body">
 						<img src="./images/service-img3.jpg" alt="Customers Image">
-						<!-- <div class="text-content">
+						<div class="text-content">
 							<h5 class="card-title">Customers</h5>
-							<p class="card-text">20</p>
-						</div> -->
-						 <div class="text-content">
-                <h5 class="card-title">Customers</h5>
-                <p class="card-text">
-                    <%
-                    UserRegistrationDAO dao2 = new UserRegistrationDAO();
-                        int customerCount = 0;
-                        try {
-                            customerCount = dao2.customerCount(); // Call customerCount method
-                        } catch (SQLException e) {
-							e.printStackTrace();
-						}
-                    %>
-                    <%=customerCount%>
-                    <!-- Display the customer count here -->
-                </p>
-            </div>
+							<p class="card-text">
+								<%
+									UserRegistrationDAO dao2 = new UserRegistrationDAO();
+									int customerCount = 0;
+									try {
+										customerCount = dao2.customerCount(); // Call customerCount method
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+								%>
+								<%=customerCount%>
+								<!-- Display the customer count here -->
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>

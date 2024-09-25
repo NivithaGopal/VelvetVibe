@@ -307,5 +307,47 @@ public class ServiceVelvetvibeDAO {
             return false;
         }
     }
+    
+    public List<ServiceVelvetvibeBean> searchServices(String searchTerm) {
+        List<ServiceVelvetvibeBean> services = new ArrayList<>();
+        String query = "SELECT svv.servicevv_id, svv.service_id, svv.categoryId, svv.description, svv.image1, svv.image2, svv.image3, "
+                     + "svv.amount_from, svv.amount_to, s.service_name, sc.categoryName "
+                     + "FROM service_velvetvibe svv "
+                     + "JOIN services s ON svv.service_id = s.service_id "
+                     + "JOIN service_category sc ON svv.categoryId = sc.categoryId "
+                     + "WHERE s.service_name LIKE ? OR sc.categoryName LIKE ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            // Set the search term for both service_name and categoryName
+            String searchWildcard = "%" + searchTerm + "%";
+            ps.setString(1, searchWildcard);
+            ps.setString(2, searchWildcard);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ServiceVelvetvibeBean service = new ServiceVelvetvibeBean();
+                service.setServicevv_id(rs.getInt("servicevv_id"));
+                service.setService_id(rs.getInt("service_id"));
+                service.setService_name(rs.getString("service_name"));
+                service.setCategoryId(rs.getInt("categoryId"));
+                service.setCategoryName(rs.getString("categoryName"));
+                service.setDescription(rs.getString("description"));
+                service.setImage1(rs.getString("image1"));
+                service.setImage2(rs.getString("image2"));
+                service.setImage3(rs.getString("image3"));
+                service.setAmount_from(rs.getInt("amount_from"));
+                service.setAmount_to(rs.getInt("amount_to"));
+                services.add(service);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return services;
+    }
+
 
 }

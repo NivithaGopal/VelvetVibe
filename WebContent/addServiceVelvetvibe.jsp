@@ -93,10 +93,10 @@ body {
 		var amountFrom=document.getElementById("amountFrom").value;
 		var amountTo=document.getElementById("amountTo").value;
 		
-		var imagePattern = /\.(jpg|jpeg|png|gif)(\?.*)?$/i; // Matches .jpg, .jpeg, .png, .gif before query parameters
+		/* var imagePattern = /\.(jpg|jpeg|png|gif)(\?.*)?$/i; // Matches .jpg, .jpeg, .png, .gif before query parameters
 		var bingImagePattern = /OIP\.[a-zA-Z0-9_-]+/;
 		var priceRegex = /^[1-9]\d*(\.\d{1,2})?$/; 
-		var gstaticImagePattern = /gstatic\.com\/images\?/;
+		var gstaticImagePattern = /gstatic\.com\/images\?/; */
 		
 		if(serviceName == ""){
 			alert("ServiceName is required!");
@@ -119,7 +119,7 @@ body {
 			return false;
 		}
 		
-		if (image1 !== "" && !imagePattern.test(image1) && !bingImagePattern.test(image1) && !gstaticImagePattern.test(image1)) {
+		/* if (image1 !== "" && !imagePattern.test(image1) && !bingImagePattern.test(image1) && !gstaticImagePattern.test(image1)) {
 			alert("Image 1 is not a valid image URL! Please provide a correct image URL ending with .jpg, .jpeg, .png, or .gif, a valid Bing image URL, or a valid Gstatic image URL.");
 			return false;
 		}
@@ -130,7 +130,7 @@ body {
 		if (image3 !== "" && !imagePattern.test(image3) && !bingImagePattern.test(image3) && !gstaticImagePattern.test(image3)) {
 			alert("Image 3 is not a valid image URL! Please provide a correct image URL ending with .jpg, .jpeg, .png, or .gif, a valid Bing image URL, or a valid Gstatic image URL.");
 			return false;
-		}
+		} */
 		
 		
 		if(amountFrom == ""){

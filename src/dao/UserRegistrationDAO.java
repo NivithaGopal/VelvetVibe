@@ -2,7 +2,9 @@ package dao;
 
 import java.sql.*;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
+import java.util.List;
+import dao.*;
 import bean.UserRegistration;
 import dbconnection.DBConnection;
 
@@ -83,4 +85,41 @@ public class UserRegistrationDAO {
 	        }
 	        return 0; // Return 0 if no customers are found
 	    }
+	    public boolean updatePasswordByEmail(String email, String hashedPassword) {
+	        String query = "UPDATE user_registration SET password = ? WHERE email = ?";
+	        try (Connection connection = DBConnection.getConnection();
+	             PreparedStatement statement = connection.prepareStatement(query)) {
+	            
+	            statement.setString(1, hashedPassword);
+	            statement.setString(2, email);
+	            
+	            return statement.executeUpdate() > 0; // Returns true if the update was successful
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false; // In case of an error
+	        }
+	    }
+
+	    
+	    public List<UserRegistration> getAllUsers() throws SQLException {
+	        List<UserRegistration> users = new ArrayList<>();
+	        String query = "SELECT * FROM user_registration";
+
+	        try (Connection connection = DBConnection.getConnection();
+	             PreparedStatement statement = connection.prepareStatement(query);
+	             ResultSet resultSet = statement.executeQuery()) {
+
+	            while (resultSet.next()) {
+	                UserRegistration user = new UserRegistration();
+	                user.setUser_id(resultSet.getInt("user_id"));
+	                user.setFullName(resultSet.getString("fullName"));
+	                user.setDob(resultSet.getDate("dob"));
+	                user.setEmail(resultSet.getString("email"));
+	                users.add(user);
+	            }
+	        }
+
+	        return users;
+	    }
+
 }

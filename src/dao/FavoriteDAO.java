@@ -43,20 +43,23 @@ public class FavoriteDAO {
 
 
     
-    // Remove a service from user's favourites
-    public boolean removeFavourite(int userId, int servicevvId) {
-        String sql = "DELETE FROM favourite WHERE user_id = ? AND servicevv_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, userId);
-            stmt.setInt(2, servicevvId);
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	public boolean removeFavorite(int userId, int serviceVvId) {
+	    String query = "DELETE FROM favourite WHERE user_id = ? AND servicevv_id = ?";
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(query)) {
+	         
+	        ps.setInt(1, userId);
+	        ps.setInt(2, serviceVvId);
+	        
+	        int rowsAffected = ps.executeUpdate();
+	        System.out.println("Rows affected by delete: " + rowsAffected); // Debug line
+	        return rowsAffected > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
     public List<Integer> getFavoriteServiceIds(int userId) {
         List<Integer> serviceIds = new ArrayList<>();
         String query = "SELECT servicevv_id FROM favourite WHERE user_id = ?";
@@ -82,21 +85,6 @@ public class FavoriteDAO {
     }
     
     
-    // Method to remove a service from the user's favorites
-    public boolean removeFavorite(int userId, int serviceVvId) {
-        String query = "DELETE FROM favourite WHERE user_id = ? AND servicevv_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-            
-            ps.setInt(1, userId);
-            ps.setInt(2, serviceVvId);
-            
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+   
 
 }

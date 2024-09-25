@@ -169,7 +169,7 @@
                 </div>
             </div>
             <div class="text-end mt-3">
-                <a href="#">Forgot your password?</a>
+                <a href="forgotPassword.jsp">Forgot your password?</a>
             </div>
 
             <br>

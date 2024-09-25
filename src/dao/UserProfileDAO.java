@@ -101,4 +101,27 @@ public class UserProfileDAO {
         return isInsertedOrUpdated;
     }
 
+    
+    public UserProfileBean getUserByEmailId(String email) {
+        UserProfileBean user = null;
+        String query = "SELECT * FROM users WHERE email = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+             
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                user = new UserProfileBean();
+                user.setUserId(rs.getInt("user_id")); // Ensure this column name matches your DB
+                // Set other properties as needed
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return user;
+    }
+
 }

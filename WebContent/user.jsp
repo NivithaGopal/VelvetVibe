@@ -118,21 +118,15 @@ footer a {
 						data-bs-toggle="dropdown" aria-expanded="false">Appointment
 							Booking</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">Browse Services</a></li>
-							<li><a class="dropdown-item" href="#">Book Appointment</a></li>
+							<li><a class="dropdown-item" href="viewBooking.jsp">Book Appointment</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link " href="feedback.jsp">Feedback</a></li>
+										<li class="nav-item"><a class="nav-link " href="viewGalleryUser.jsp">Gallery</a></li>
+					
 				</ul>
 				<ul
 					class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
-					<li class="nav-item search-input">
-						<form class="d-flex ms-3" role="search">
-							<input class="form-control me-2" type="search"
-								placeholder="Search...." aria-label="Search"> <i
-								class="fa-solid fa-search"></i>
-						</form>
-					</li>
-					<li class="nav-item"><a class="nav-link" href="viewFavourites.jsp"> <i
+										<li class="nav-item"><a class="nav-link" href="viewFavourites.jsp"> <i
 							class="fas fa-heart"></i></a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="userProfile.jsp"> <i class="fas fa-user"></i>
